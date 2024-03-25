@@ -1,0 +1,14 @@
+CREATE TABLE IF NOT EXISTS model(
+    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
+    model_id VARCHAR(36) NOT NULL COMMENT 'Model Id',
+    name VARCHAR(255) NOT NULL COMMENT 'Name',
+    description VARCHAR(255) NOT NULL COMMENT 'Description',
+    type VARCHAR(16) NOT NULL COMMENT 'Type',
+    url VARCHAR(1024) NOT NULL COMMENT 'Url',
+    model VARCHAR(32) NOT NULL COMMENT 'Model',
+    authorization VARCHAR(255) NOT NULL COMMENT 'Authorization',
+    creator_id VARCHAR(36) NOT NULL COMMENT 'Creator Id',
+    create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Create Time',
+    modified_time DATETIME ON UPDATE CURRENT_TIMESTAMP COMMENT 'Modified Time',
+    is_deleted TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Is Deleted, 1 true 0 false'
+) COMMENT 'model';

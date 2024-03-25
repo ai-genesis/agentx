@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: agentz
+  profiles:
+    active: dev
+  cloud:
+    compatibility-verifier:
+      enabled: false
+logging:
+  level.net.hqhome.ai.agentz.infrastructor.common: debug
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml

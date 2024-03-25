@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS thread(
+    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
+    thread_id VARCHAR(36) NOT NULL COMMENT 'Thread Id',
+--    name VARCHAR(255) NOT NULL COMMENT 'Name',
+--    description VARCHAR(255) NOT NULL COMMENT 'Description',
+    agent_id VARCHAR(36) NOT NULL COMMENT 'Agent Id',
+    user_id VARCHAR(36) NOT NULL COMMENT 'User Id',
+    status TINYINT UNSIGNED NOT NULL COMMENT 'Status',
+    create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Create Time',
+    modified_time DATETIME ON UPDATE CURRENT_TIMESTAMP COMMENT 'Modified Time',
+    is_deleted TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Is Deleted, 1 true 0 false',
+    UNIQUE KEY (thread_id)
+) COMMENT 'thread';
