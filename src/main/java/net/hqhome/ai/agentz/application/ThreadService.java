@@ -33,7 +33,7 @@ public class ThreadService implements ISubscriber {
     @Autowired
     private ISubscriber subscriberAdapter;
 
-    private final Map<String, DeferredResult<ResponseWrapper<String>>> threadDeferredResult = new ConcurrentHashMap<>();
+    private final Map<String, Map.Entry<Thread, DeferredResult<ResponseWrapper<String>>>> threadDeferredResult = new ConcurrentHashMap<>();
 
     @PostConstruct
     public void init() {
@@ -44,20 +44,21 @@ public class ThreadService implements ISubscriber {
     public void handle(AbstractDomainEvent event) {
         AgentFinishedDomainEvent ev = (AgentFinishedDomainEvent) event;
         String threadId = ev.getThreadId();
-        Thread thread = threadFactory.get(threadId, ev.getUserId());
+        Map.Entry<Thread, DeferredResult<ResponseWrapper<String>>> entry = threadDeferredResult.get(threadId);
+        Thread thread = entry.getKey();
+        var deferredResult = entry.getValue();
 
         if (ev.getIsError()) {
             threadDomainService.updateStatus(thread, ThreadStatus.IDLE);
-            DeferredResult<ResponseWrapper<String>> deferredResult = threadDeferredResult.remove(threadId);
             deferredResult.setErrorResult(ev.getError());
         } else {
             String content = ev.getResult();
             thread.setStatus(ThreadStatus.IDLE);
             threadDomainService.updateStatusAndAddMessage(thread, threadFactory.createAssistantMessage(content));
-
-            DeferredResult<ResponseWrapper<String>> deferredResult = threadDeferredResult.remove(threadId);
             deferredResult.setResult(ResponseWrapper.success(ev.getResult()));
         }
+
+        threadDeferredResult.remove(threadId);
     }
 
     public String createThread(String agentId, User user) {
@@ -90,10 +91,10 @@ public class ThreadService implements ISubscriber {
 //            return;
 //        }
 
-        var previous = threadDeferredResult.putIfAbsent(threadId, deferredResult);
+        var previous = threadDeferredResult.putIfAbsent(threadId, Map.entry(thread, deferredResult));
 
         if (previous != null) {
-            deferredResult.setErrorResult(new RuntimeException("thread is inconsistency"));
+            deferredResult.setErrorResult(new RuntimeException("thread is running"));
             return;
         }
 

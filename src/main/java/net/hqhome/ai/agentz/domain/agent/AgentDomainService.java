@@ -12,6 +12,7 @@ import net.hqhome.ai.agentz.domain.event.AbstractDomainEvent;
 // import net.hqhome.ai.agentz.domain.event.EventType;
 import net.hqhome.ai.agentz.domain.event.events.MessageAddedDomainEvent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -32,14 +33,36 @@ public class AgentDomainService extends AbstractDomainService {
   public void handle(AbstractDomainEvent event) {
     if (event instanceof MessageAddedDomainEvent msgAddedEvent) {
       Agent agent = agentFactory.get(msgAddedEvent.getAgentId());
-      String res = agent.run(agentResource, JSON.parseArray(msgAddedEvent.getMessages(), ChatMessage.class));
 
-      if (agent instanceof ChatAgent) {
+      try {
+        String res = agent.run(agentResource, JSON.parseArray(msgAddedEvent.getMessages(), ChatMessage.class));
+
+        if (agent instanceof ChatAgent) {
+          AgentFinishedDomainEvent agentFinishedDomainEvent = new AgentFinishedDomainEvent();
+          agentFinishedDomainEvent.setThreadId(msgAddedEvent.getThreadId());
+          agentFinishedDomainEvent.setIsError(false);
+          agentFinishedDomainEvent.setResult(res);
+          publishEvent(agentFinishedDomainEvent);
+        } else if (agent instanceof RagAgent) {
+//        List<Task> tasks = agent.parseOutput(res);
+//        while (tasks  != FinishTask) {
+//          if (tasks is finishtask){
+//            msgAddedEvent.getCallback().accept(res);
+//          } else {
+//            tasks.run("", (rs) -> {
+//              tasks = agent.parseOutput(rs);
+//            })
+//          }
+
+          List<String> result = new ArrayList<>();
+
+//          Task task = agent.parseOutput(res);
+        }
+      } catch (Exception e) {
         AgentFinishedDomainEvent agentFinishedDomainEvent = new AgentFinishedDomainEvent();
         agentFinishedDomainEvent.setThreadId(msgAddedEvent.getThreadId());
-        agentFinishedDomainEvent.setUserId(msgAddedEvent.getUserId());
-        agentFinishedDomainEvent.setIsError(false);
-        agentFinishedDomainEvent.setResult(res);
+        agentFinishedDomainEvent.setIsError(true);
+        agentFinishedDomainEvent.setError(e);
         publishEvent(agentFinishedDomainEvent);
       }
     }
