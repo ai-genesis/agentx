@@ -17,7 +17,7 @@ class GlobalDefaultExceptionHandler {
 
     @ResponseBody
     @ExceptionHandler(value = Exception.class)
-    public ResponseWrapper defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
+    public <T> ResponseWrapper<T> defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
         // If the exception is annotated with @ResponseStatus rethrow it and let
         // the framework handle it - like the OrderNotFoundException example
         // at the start of this post.

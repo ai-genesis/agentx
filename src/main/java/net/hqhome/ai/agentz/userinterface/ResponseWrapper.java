@@ -9,24 +9,24 @@ public class ResponseWrapper<T> {
     private String error;
     private String requestId;
 
-    public static ResponseWrapper success(Object data) {
-        ResponseWrapper wrapper = new ResponseWrapper<>();
+    public static <T> ResponseWrapper<T> success(T data) {
+        ResponseWrapper<T> wrapper = new ResponseWrapper<>();
         wrapper.setCode(ResponseCode.SUCCESS.name());
         wrapper.setData(data);
 
         return wrapper;
     }
 
-    public static ResponseWrapper failed(String error) {
-        ResponseWrapper wrapper = new ResponseWrapper<>();
+    public static <T> ResponseWrapper<T> failed(String error) {
+        ResponseWrapper<T> wrapper = new ResponseWrapper<>();
         wrapper.setCode(ResponseCode.ERROR.name());
         wrapper.setError(error);
 
         return wrapper;
     }
 
-    public static ResponseWrapper failed(Exception error) {
-        ResponseWrapper wrapper = new ResponseWrapper<>();
+    public static <T> ResponseWrapper<T> failed(Exception error) {
+        ResponseWrapper<T> wrapper = new ResponseWrapper<>();
         wrapper.setCode(ResponseCode.ERROR.name());
         wrapper.setError(error.getMessage());
 
