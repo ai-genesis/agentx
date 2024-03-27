@@ -38,4 +38,4 @@ out/
 
 application-dev.yml
 mybatisGenerator.gradle
-curl.history
+curl

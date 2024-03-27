@@ -20,11 +20,6 @@ public class AgentService {
   @Autowired
   private AgentRepository agentRepository;
 
-  public String createAgent(User creator, String name, String description) {
-    var agent = agentFactory.create(name, description, creator.getId());
-    return agent.getId();
-  }
-
   public String createAgent(AgentRequest request, User creator) {
     var model = agentFactory.getModel(request.getModelId());  // TODO check user
     if (model == null) {

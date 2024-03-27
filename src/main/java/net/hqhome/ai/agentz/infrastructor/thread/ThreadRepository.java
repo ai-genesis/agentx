@@ -60,6 +60,11 @@ public class ThreadRepository implements IThreadRepository {
   }
 
   @Override
+  public void addMessage(Message message, String threadId) {
+    messageMapper.insertSelective(ThreadDataObjectConverter.INSTANCE.toDO(message, threadId));
+  }
+
+  @Override
   @Transactional
   public void update(Thread thread, Message message) {
     ThreadDOExample example = new ThreadDOExample();

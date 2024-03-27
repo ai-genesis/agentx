@@ -11,4 +11,6 @@ public interface IThreadRepository {
 
   void update(Thread thread, Message message);
   void update(Thread thread);
+
+  void addMessage(Message message, String threadId);
 }

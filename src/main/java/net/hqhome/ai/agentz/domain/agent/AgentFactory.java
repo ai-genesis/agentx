@@ -15,16 +15,6 @@ public class AgentFactory {
   @Autowired
   private IAgentRepository agentRepository;
 
-  public Agent create(String name, String description, String creatorId) {
-    var agent = new Agent();
-    agent.setId(UUID.randomUUID().toString());
-    agent.setName(name);
-    agent.setDescription(description);
-    agent.setCreatorId(creatorId);
-
-    return agent;
-  }
-
   public Agent create(String name, String description, AgentType type, Model model, String systemMessage, String creatorId, ModelParameter modelParameter) {
     switch (type) {
       case CHAT -> {
